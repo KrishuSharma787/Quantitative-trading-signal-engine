@@ -1,0 +1,93 @@
+# Power BI DAX Measures Reference
+# Paste each measure into Power BI via: Home → New Measure
+
+# ── KPI Cards ──────────────────────────────────────────────────────────────────
+
+Current Price =
+LASTNONBLANK(stock_data[Close], 1)
+
+Period High =
+MAXX(
+    FILTER(stock_data, stock_data[Ticker] = SELECTEDVALUE(stock_data[Ticker])),
+    stock_data[High]
+)
+
+Period Low =
+MINX(
+    FILTER(stock_data, stock_data[Ticker] = SELECTEDVALUE(stock_data[Ticker])),
+    stock_data[Low]
+)
+
+Avg RSI =
+AVERAGEX(stock_data, stock_data[RSI])
+
+Last Signal =
+LASTNONBLANK(stock_data[Signal_Label], 1)
+
+Last Refreshed =
+"Updated: " & FORMAT(NOW(), "DD MMM YYYY HH:MM:SS")
+
+# ── Price Change ───────────────────────────────────────────────────────────────
+
+Price Change % =
+VAR latest =
+    CALCULATE(
+        LASTNONBLANK(stock_data[Close], 1),
+        FILTER(stock_data, stock_data[Ticker] = SELECTEDVALUE(stock_data[Ticker]))
+    )
+VAR first =
+    CALCULATE(
+        FIRSTNONBLANK(stock_data[Close], 1),
+        FILTER(stock_data, stock_data[Ticker] = SELECTEDVALUE(stock_data[Ticker]))
+    )
+RETURN
+    DIVIDE(latest - first, first) * 100
+
+# ── Dynamic Titles ─────────────────────────────────────────────────────────────
+
+Selected Ticker =
+IF(
+    HASONEVALUE(stock_data[Ticker]),
+    VALUES(stock_data[Ticker]),
+    "All Tickers"
+)
+
+Chart Title Price =
+"Price & Moving Averages — " & [Selected Ticker]
+
+Chart Title RSI =
+"RSI (14-day) — " & [Selected Ticker]
+
+# ── Sentiment ──────────────────────────────────────────────────────────────────
+
+Current Mood =
+LOOKUPVALUE(
+    sentiment_summary[Mood],
+    sentiment_summary[Ticker], SELECTEDVALUE(stock_data[Ticker])
+)
+
+Avg Sentiment Score =
+LOOKUPVALUE(
+    sentiment_summary[Avg_Compound],
+    sentiment_summary[Ticker], SELECTEDVALUE(stock_data[Ticker])
+)
+
+# ── Backtest ───────────────────────────────────────────────────────────────────
+
+Strategy Alpha % =
+LOOKUPVALUE(
+    backtest_results[Alpha_Pct],
+    backtest_results[Ticker], SELECTEDVALUE(stock_data[Ticker])
+)
+
+Strategy Return % =
+LOOKUPVALUE(
+    backtest_results[Total_Return_Pct],
+    backtest_results[Ticker], SELECTEDVALUE(stock_data[Ticker])
+)
+
+BuyHold Return % =
+LOOKUPVALUE(
+    backtest_results[BuyHold_Return_Pct],
+    backtest_results[Ticker], SELECTEDVALUE(stock_data[Ticker])
+)

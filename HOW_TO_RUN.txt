@@ -1,0 +1,331 @@
+╔══════════════════════════════════════════════════════════════╗
+║     QUANTITATIVE TRADING SIGNAL ENGINE                       ║
+║     Step-by-Step: Run Locally + Deploy to Streamlit Cloud    ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 1 — RUN LOCALLY ON YOUR COMPUTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PREREQUISITES (do these once, ever)
+────────────────────────────────────
+□  Python installed
+      → Check: open CMD, type: python --version
+      → If missing: download from python.org, install with defaults
+      → Make sure "Add Python to PATH" is ticked during install
+
+□  Internet connection (needed to fetch live stock data)
+
+
+STEP 1 — EXTRACT THE ZIP
+─────────────────────────
+1. Right-click the downloaded zip file
+2. Click "Extract All"
+3. Choose a location you'll remember
+   e.g. C:\Users\YourName\Projects\
+4. You should now have a folder called:
+   quantitative-trading-signal-engine/
+
+
+STEP 2 — OPEN COMMAND PROMPT IN THE PROJECT FOLDER
+───────────────────────────────────────────────────
+Option A (easiest):
+  1. Open the project folder in File Explorer
+  2. Click the address bar at the top
+  3. Type: cmd
+  4. Press Enter — CMD opens directly in that folder
+
+Option B:
+  1. Press Windows + R
+  2. Type: cmd → press Enter
+  3. Type: cd C:\Users\YourName\Projects\quantitative-trading-signal-engine
+  4. Press Enter
+
+
+STEP 3 — INSTALL ALL DEPENDENCIES
+───────────────────────────────────
+Copy and paste this entire line into CMD, press Enter:
+
+  pip install yfinance pandas numpy scikit-learn vaderSentiment requests schedule streamlit plotly python-dotenv openpyxl
+
+Wait 2-3 minutes. You will see lots of text — that is normal.
+When you see "Successfully installed..." you are done.
+
+
+STEP 4 — CHECK YOUR .env FILE
+──────────────────────────────
+Open the .env file in the project folder with Notepad.
+It should look like this:
+
+  NEWS_API_KEY=64d37d77b7ff441990b62cb91235308f
+  ALERT_EMAIL_FROM=your_gmail@gmail.com
+  ALERT_EMAIL_TO=your_gmail@gmail.com
+  ALERT_EMAIL_PASSWORD=your_16_char_app_password
+
+→ The NEWS_API_KEY is already filled in.
+→ Fill in the Gmail fields only if you want email alerts.
+→ If you don't want email alerts, leave them as-is — the app
+  will still work perfectly.
+→ Save the file (Ctrl+S)
+
+
+STEP 5 — SEED THE DATABASE (fetch live data)
+─────────────────────────────────────────────
+In CMD, type:
+
+  python run.py --once
+
+What happens:
+  - Fetches 6 months of data for AAPL, TSLA, MSFT, GOOGL, AMZN
+  - Calculates RSI, SMA, Bollinger Bands, correlation
+  - Scores news headlines with VADER sentiment
+  - Trains the ML buy/sell signal model
+  - Runs the backtest
+  - Saves everything to stocks.db
+
+Takes about 30-60 seconds. You will see checkmarks as each step
+completes. When you see "Pipeline complete" you are done.
+
+  ✓ If you see any red errors about yfinance — just run it again.
+    yfinance occasionally times out on the first try.
+
+
+STEP 6 — LAUNCH THE APP
+────────────────────────
+In CMD, type:
+
+  streamlit run app.py
+
+What happens:
+  - CMD shows: "You can now view your Streamlit app in your browser"
+  - Your browser opens automatically to: http://localhost:8501
+  - The dashboard loads with all 5 tickers
+
+SHORTCUT: Instead of Steps 5 and 6, you can just double-click
+START.bat in the project folder — it does everything automatically.
+
+
+WHAT YOU SHOULD SEE
+────────────────────
+✓ Header shows: "Quantitative Trading Signal Engine — AAPL"
+✓ 6 KPI cards at the top (Price, High, Low, RSI, Correlation, Signal)
+✓ Price chart with SMA lines and buy/sell triangle markers
+✓ RSI chart with overbought/oversold lines
+✓ Backtest chart showing ML strategy vs buy-and-hold
+✓ Right panel: sentiment gauge + headlines
+✓ Bottom: cross-ticker comparison + alpha bar chart
+
+
+STOPPING THE APP
+─────────────────
+Press Ctrl+C in the CMD window to stop Streamlit.
+The stocks.db file stays — you don't need to re-run the pipeline
+next time unless you want fresh data.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 2 — DEPLOY TO STREAMLIT CLOUD (public live URL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHAT YOU NEED FIRST
+────────────────────
+□  Local app working (Part 1 done)
+□  stocks.db created (from Step 5 above)
+□  A free GitHub account (github.com)
+□  A free Streamlit Cloud account (share.streamlit.io)
+
+
+STEP 1 — CREATE GITHUB ACCOUNT
+────────────────────────────────
+1. Go to github.com
+2. Click Sign up
+3. Enter email, password, username
+4. Choose Free plan
+5. Verify your email
+
+
+STEP 2 — CREATE A NEW REPOSITORY
+──────────────────────────────────
+1. Click the + icon (top right) → New repository
+2. Repository name: quantitative-trading-signal-engine
+3. Set to: Public
+4. Tick: Add a README file
+5. Click: Create repository
+
+
+STEP 3 — CREATE SUBFOLDERS
+───────────────────────────
+GitHub needs folders to exist before you can upload into them.
+
+For EACH of these, do:
+  Click "Add file" → "Create new file"
+  Type the path including folder name:
+  Click "Commit new file"
+
+  Paths to create:
+    data/placeholder.txt          (content: placeholder)
+    pipeline/placeholder.txt      (content: placeholder)
+    backtest/placeholder.txt      (content: placeholder)
+    alerts/placeholder.txt        (content: placeholder)
+    .streamlit/placeholder.txt    (content: placeholder)
+
+
+STEP 4 — UPLOAD ALL FILES
+──────────────────────────
+Click "Add file" → "Upload files" and drag in the files below.
+Do this folder by folder.
+
+ROOT FOLDER (top level of repo):
+  app.py
+  run.py
+  config.py
+  database.py
+  requirements.txt
+  README.md               ← replace the auto-created one
+  DEPLOYMENT.md
+  powerbi_dax_measures.txt
+  .env.example            ← safe to upload, no real keys
+  .gitignore
+  START.bat
+  start.sh
+  Report.pbix
+  stocks.db               ← IMPORTANT: upload this for live data
+
+  !! DO NOT upload .env !! (contains your real API key)
+
+data/ FOLDER:
+  sample_stock_data.csv
+  sp500_index_data.csv
+  final_analysis.csv
+
+pipeline/ FOLDER:
+  fetch_data.py
+  indicators.py
+  sentiment.py
+  ml_model.py
+  __init__.py
+
+backtest/ FOLDER:
+  backtest.py
+  __init__.py
+
+alerts/ FOLDER:
+  email_alerts.py
+  __init__.py
+
+.streamlit/ FOLDER:
+  config.toml
+
+
+STEP 5 — DELETE PLACEHOLDER FILES
+───────────────────────────────────
+In each subfolder:
+1. Click placeholder.txt
+2. Click the trash/delete icon (top right of file view)
+3. Click Commit changes
+
+
+STEP 6 — CREATE STREAMLIT CLOUD ACCOUNT
+─────────────────────────────────────────
+1. Go to share.streamlit.io
+2. Click Continue with GitHub
+3. Authorise Streamlit to access your GitHub
+4. You are now in the Streamlit Cloud dashboard
+
+
+STEP 7 — DEPLOY YOUR APP
+─────────────────────────
+1. Click New app
+2. Fill in the form:
+     Repository: YourUsername/quantitative-trading-signal-engine
+     Branch:     main
+     Main file:  app.py
+
+3. Click Advanced settings (IMPORTANT — do this before Deploy)
+4. In the Secrets box, paste:
+
+     NEWS_API_KEY = "64d37d77b7ff441990b62cb91235308f"
+     ALERT_EMAIL_FROM = "your_gmail@gmail.com"
+     ALERT_EMAIL_TO = "your_gmail@gmail.com"
+     ALERT_EMAIL_PASSWORD = "your_16_char_app_password"
+
+   → If you don't have email alerts set up, just fill in
+     the NEWS_API_KEY line and leave the rest as empty strings:
+     ALERT_EMAIL_FROM = ""
+
+5. Click Save
+6. Click Deploy!
+
+Deployment takes 2-3 minutes. You will see a log of pip installs.
+When it says "Your app is live!" you have your public URL.
+
+
+STEP 8 — YOUR LIVE URL
+───────────────────────
+Your URL will look like:
+  https://yourusername-quantitative-trading-app-xxxx.streamlit.app
+
+ADD THIS TO:
+  ✓ Resume — next to the GitHub link
+  ✓ LinkedIn profile — Featured section
+  ✓ README.md on GitHub — at the top
+
+
+STEP 9 — KEEPING DATA FRESH
+─────────────────────────────
+Streamlit Cloud does not auto-refresh data. To update:
+
+  1. Run locally:  python run.py --once
+  2. Go to GitHub repo → Add file → Upload files
+  3. Upload the new stocks.db (overwrite the old one)
+  4. Commit → Streamlit auto-detects and refreshes in ~1 min
+
+Do this the night before any interview.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  COMMON ERRORS AND FIXES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ERROR: "python is not recognized"
+  FIX: Reinstall Python from python.org, tick "Add to PATH"
+
+ERROR: "No module named streamlit" (or any module)
+  FIX: Run the pip install command again (Step 3)
+
+ERROR: "No data found" in Streamlit app
+  FIX: Run python run.py --once first, then streamlit run app.py
+
+ERROR: yfinance download fails
+  FIX: Check internet connection, run python run.py --once again
+
+ERROR: Streamlit Cloud shows "ModuleNotFoundError"
+  FIX: Make sure requirements.txt was uploaded to root of repo
+
+ERROR: Streamlit Cloud shows blank page
+  FIX: Check that stocks.db was uploaded to GitHub root
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FINAL CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Local:
+  □ pip install ran with no errors
+  □ python run.py --once completed with all checkmarks
+  □ streamlit run app.py opened at localhost:8501
+  □ All 5 tickers visible in dropdown
+  □ Sentiment gauge showing in right panel
+  □ Backtest chart rendered
+
+GitHub:
+  □ Repo is public
+  □ All .py files in correct subfolders
+  □ data/ folder has all 3 CSV files
+  □ stocks.db uploaded (for Streamlit Cloud)
+  □ .env is NOT in the repo
+
+Streamlit Cloud:
+  □ App deployed and shows "Your app is live"
+  □ NEWS_API_KEY added to Secrets
+  □ Public URL working in browser
+  □ URL added to resume and LinkedIn
