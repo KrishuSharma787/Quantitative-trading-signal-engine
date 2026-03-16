@@ -132,13 +132,6 @@ Last Signal = LASTNONBLANK(stock_data[Signal_Label], 1)
 Chart Title = "Price & Moving Averages — " & SELECTEDVALUE(stock_data[Ticker], "All")
 ```
 
----
-
-## 📸 Screenshots
-
-> Add screenshots of your Streamlit app and Power BI dashboard here
-
----
 
 ## ⚠️ Disclaimer
 
